@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     public float maxHP = 10f;
     private float currentHP;
-    bool isDead = false;
+    public bool isDead = false;
 
     PlayerController player;
 

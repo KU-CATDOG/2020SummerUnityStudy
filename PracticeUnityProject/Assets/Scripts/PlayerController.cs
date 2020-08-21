@@ -7,18 +7,28 @@ public class PlayerController : MonoBehaviour
 {
     public Camera cam;
     public float speed = 2f;
+    public float immuneTime = 2f;
 
     public Transform bulletOut;
     public GameObject bulletPrefab;
 
-    private int score = 0;
+    public int score = 0;
     public int hp = 5;
+
+    public float currImmuneTime = 0;
+
+    public bool gameOver = false;
+
 
     void Update()
     {
-        Move();
-        Rotate();
-        Fire();
+        if (!gameOver)
+        {
+            Move();
+            Rotate();
+            Fire();
+        }
+        currImmuneTime = Mathf.Max(0f, currImmuneTime - Time.deltaTime);
     }
 
     void Move()
@@ -52,5 +62,28 @@ public class PlayerController : MonoBehaviour
     public void GainScore(int s)
     {
         score += s;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && currImmuneTime <= 0 && !collision.gameObject.GetComponent<EnemyController>().isDead)
+        {
+            hp--;
+            currImmuneTime = immuneTime;
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Fall"))
+        {
+            hp = 0;
+        }
+        if (hp <= 0)
+        {
+            PlayerDeath();
+        }
+    }
+
+    void PlayerDeath()
+    {
+        gameOver = true;
+        Debug.Log("you died");
     }
 }

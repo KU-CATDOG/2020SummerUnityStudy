@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public bool gameOver = false;
+    public PlayerController player;
 
     public float initDelay = 10f;
     public float delayDec = 0.2f;
@@ -23,7 +23,7 @@ public class EnemySpawner : MonoBehaviour
     {
         delay = initDelay;
 
-        while (!gameOver)
+        while (!player.gameOver)
         {
             Instantiate(enemyPrefab, spawnPoints[Random.Range(0, spawnPoints.Length)].position, Quaternion.identity);
 
