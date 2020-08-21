@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
@@ -19,7 +20,16 @@ public class PlayerController : MonoBehaviour
 
     public bool gameOver = false;
 
+    public Text hpText;
+    public Text scoreText;
 
+
+    private void Start()
+    {
+        hpText.text = "HP : " + hp;
+        scoreText.text = "Score : " + score;
+
+    }
     void Update()
     {
         if (!gameOver)
@@ -62,6 +72,7 @@ public class PlayerController : MonoBehaviour
     public void GainScore(int s)
     {
         score += s;
+        scoreText.text = "Score : " + score;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -79,6 +90,7 @@ public class PlayerController : MonoBehaviour
         {
             PlayerDeath();
         }
+        hpText.text = "HP : " + hp;
     }
 
     void PlayerDeath()
