@@ -11,13 +11,9 @@ public class PlayerController : MonoBehaviour
     public Transform bulletOut;
     public GameObject bulletPrefab;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private int score = 0;
+    public int hp = 5;
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -51,5 +47,10 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(bulletPrefab, bulletOut.position, bulletOut.rotation);
         }
+    }
+
+    public void GainScore(int s)
+    {
+        score += s;
     }
 }

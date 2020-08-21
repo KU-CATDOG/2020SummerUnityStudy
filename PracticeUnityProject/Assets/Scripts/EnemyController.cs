@@ -7,8 +7,12 @@ public class EnemyController : MonoBehaviour
     public float maxHP = 10f;
     private float currentHP;
     bool isDead = false;
+
+    PlayerController player;
+
     void Start()
     {
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
         currentHP = maxHP;
     }
 
@@ -26,6 +30,7 @@ public class EnemyController : MonoBehaviour
             {
                 GetComponent<Animator>().SetTrigger("death");
                 isDead = true;
+                player.GainScore(1);
                 StartCoroutine(BodyLifeOver());
             }
         }
