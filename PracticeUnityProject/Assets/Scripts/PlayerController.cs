@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, LayerMask.GetMask("Floor")))
+        if (Physics.Raycast(ray, out hit, LayerMask.GetMask("Raycast")))
         {
             Vector3 lookPoint = new Vector3(hit.point.x, transform.position.y, hit.point.z);
             transform.LookAt(lookPoint, Vector3.up);
