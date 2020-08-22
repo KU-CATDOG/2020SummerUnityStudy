@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    public Camera cam;
     public float speed = 2f;
     public float immuneTime = 2f;
 
@@ -26,11 +25,11 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        hpText.text = "HP : " + hp;
+        SetHP(hp);
         scoreText.text = "Score : " + score;
-
     }
-    void Update()
+
+    private void Update()
     {
         if (!gameOver)
         {
@@ -45,14 +44,13 @@ public class PlayerController : MonoBehaviour
     {
         float dx = Input.GetAxis("Horizontal");
         float dz = Input.GetAxis("Vertical");
-        transform.position += new Vector3(dx * speed * Time.deltaTime, 0, dz * speed * Time.deltaTime);
-
+        transform.position += new Vector3(dx, 0, dz) * speed * Time.deltaTime;
     }
 
     void Rotate()
     {
         RaycastHit hit;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out hit, LayerMask.GetMask("Raycast")))
         {
@@ -75,25 +73,49 @@ public class PlayerController : MonoBehaviour
         scoreText.text = "Score : " + score;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void GetDamage(float damage)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy") && currImmuneTime <= 0 && !collision.gameObject.GetComponent<EnemyController>().isDead)
+        if(currImmuneTime <= 0)
         {
-            hp--;
+            SetHP(hp - 1);
+            if (hp <= 0)
+            {
+                PlayerDeath();
+            }
             currImmuneTime = immuneTime;
+            StartCoroutine(DamagedEffect());
         }
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Fall"))
-        {
-            hp = 0;
-        }
-        if (hp <= 0)
-        {
-            PlayerDeath();
-        }
-        hpText.text = "HP : " + hp;
     }
 
-    void PlayerDeath()
+    private IEnumerator DamagedEffect()
+    {
+        Color originalColor = GetComponent<Renderer>().material.color;
+
+        for(int i = 0; i < 20; i++)
+        {
+            GetComponent<Renderer>().material.color = new Color(originalColor.r, originalColor.g, originalColor.b, i % 2 == 0 ? 0.5f : 1);
+            yield return new WaitForSeconds(immuneTime / 20);
+        }
+
+        GetComponent<Renderer>().material.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Fall"))
+        {
+            SetHP(0);
+            PlayerDeath();
+        }
+    }
+
+    private void SetHP(int _hp)
+    {
+        hp = _hp;
+        hpText.text = "HP : " + _hp;
+    }
+
+    private void PlayerDeath()
     {
         gameOver = true;
         Debug.Log("you died");

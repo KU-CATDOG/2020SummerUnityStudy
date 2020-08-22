@@ -14,6 +14,7 @@ public class EnemySpawner : MonoBehaviour
 
     public Transform[] spawnPoints;
     public GameObject enemyPrefab;
+
     void Start()
     {
         StartCoroutine(SpawnEnemy());

@@ -7,8 +7,23 @@ public class EnemyController : MonoBehaviour
     public float maxHP = 10f;
     private float currentHP;
     public bool isDead = false;
+    public float attackRange = 2;
+    public PlayerController player;
 
-    PlayerController player;
+    public void GetDamage(float damage)
+    {
+        if(!isDead)
+        {
+            currentHP -= damage;
+            if(currentHP <= 0)
+            {
+                GetComponent<Animator>().SetTrigger("death");
+                isDead = true;
+                player.GainScore(1);
+                Destroy(gameObject, 3);
+            }
+        }
+    }
 
     void Start()
     {
@@ -16,29 +31,11 @@ public class EnemyController : MonoBehaviour
         currentHP = maxHP;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (!isDead)
+        if(Vector3.Distance(transform.position, player.transform.position) < attackRange)
         {
-            BulletBehaviour bullet = other.GetComponent<BulletBehaviour>();
-            if (bullet)
-            {
-                currentHP -= bullet.bulletDamage;
-                Destroy(bullet.gameObject);
-            }
-            if (currentHP <= 0)
-            {
-                GetComponent<Animator>().SetTrigger("death");
-                isDead = true;
-                player.GainScore(1);
-                StartCoroutine(BodyLifeOver());
-            }
+            GetComponent<Animator>().SetTrigger("attack");
         }
-    }
-
-    IEnumerator BodyLifeOver()
-    {
-        yield return new WaitForSeconds(3f);
-        Destroy(gameObject);
     }
 }

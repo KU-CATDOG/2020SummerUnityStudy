@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyWalkBehavior : StateMachineBehaviour
+public class EnemyAttackBehavior : StateMachineBehaviour
 {
-    public float moveSpeed = 2f;
-    Transform player;
-
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        player = GameObject.Find("Player").transform;
+        EnemyController enemy = animator.GetComponent<EnemyController>();
+        if(Physics.OverlapSphere(enemy.transform.position, enemy.attackRange, LayerMask.NameToLayer("Player")) != null)
+        {
+            enemy.player.GetDamage(1);
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        Vector3 dir = player.position - animator.transform.position;
-        dir.y = 0f;
-        animator.transform.position += dir.normalized * moveSpeed * Time.deltaTime;
-        animator.transform.rotation = Quaternion.LookRotation(dir);
-    }
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

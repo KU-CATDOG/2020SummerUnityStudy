@@ -8,19 +8,20 @@ public class BulletBehaviour : MonoBehaviour
     public float speed = 20f;
     public float bulletLifeTime = 5f;
     public float bulletDamage = 3f;
-    void Update()
+
+    private void OnTriggerEnter(Collider other)
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        EnemyController enemy = other.GetComponent<EnemyController>();
+        if (enemy)
+        {
+            enemy.GetDamage(bulletDamage);
+            Destroy(gameObject);
+        }
     }
 
     void Start()
     {
-        StartCoroutine(BulletLifeOver());
-    }
-
-    IEnumerator BulletLifeOver()
-    {
-        yield return new WaitForSeconds(5f);
-        Destroy(gameObject);
+        Destroy(gameObject, bulletLifeTime);
+        GetComponent<Rigidbody>().velocity = transform.forward * speed;
     }
 }

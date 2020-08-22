@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 3166059977995636661}
   - component: {fileID: 3166059977995636660}
   - component: {fileID: 3166059977995636663}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a529c593716b34eb94263fc76abd08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
   speed: 10
   immuneTime: 2
   bulletOut: {fileID: 833525260}
